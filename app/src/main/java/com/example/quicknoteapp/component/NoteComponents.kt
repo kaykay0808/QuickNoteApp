@@ -57,7 +57,6 @@ fun NoteButton(
     onClick: () -> Unit,
     enabled: Boolean = true
 ) {
-    //okoko
     Button(
         modifier = modifier,
         onClick = onClick,
@@ -83,7 +82,6 @@ fun NoteInputTextPreview() {
 fun NoteButtonPreview() {
     NoteButton(
         onClick = {},
-        text = "BUTTON"
-
+        text = "SAVE"
     )
 }
