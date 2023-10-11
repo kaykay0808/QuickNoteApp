@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.quicknoteapp.data.NotesDummyDataSource
 import com.example.quicknoteapp.screen.NoteScreen
 import com.example.quicknoteapp.ui.theme.QuickNoteAppTheme
 
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     NoteScreen(
-                        notes= emptyList(),
+                        notes = NotesDummyDataSource().loadNotes(),//emptyList(),
                         onAddNote = {},
                         onRemoveNote = {}
                     )
