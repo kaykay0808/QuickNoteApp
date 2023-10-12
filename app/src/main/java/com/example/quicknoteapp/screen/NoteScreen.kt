@@ -1,5 +1,6 @@
 package com.example.quicknoteapp.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,6 +52,8 @@ fun NoteScreen(
     var description by remember {
         mutableStateOf("")
     }
+    val toastContext = LocalContext.current
+
     // Box, Surface, Column, Row, card?, Scaffold
     Column(
         modifier = Modifier
@@ -115,8 +119,19 @@ fun NoteScreen(
                     // Validate
                     if (title.isNotEmpty() && description.isNotEmpty()) {
                         // Save and add to list.
+                        onAddNote(
+                            NoteData(
+                                title = title,
+                                description = description
+                            )
+                        )
                         title = ""
                         description = ""
+                        Toast.makeText(
+                            toastContext,
+                            "Note added",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             )
@@ -126,7 +141,9 @@ fun NoteScreen(
             items(notes) { note ->
                 NoteRow(
                     note = note,
-                    onNoteClicked = {}
+                    onNoteClicked = {
+                        onRemoveNote(note)
+                    }
                 )
                 // Text(text = note.title)
             }
@@ -159,7 +176,7 @@ fun NoteRow(
                     horizontal = 14.dp,
                     vertical = 6.dp
                 )
-                .clickable { },
+                .clickable { onNoteClicked(note) },
             horizontalAlignment = Alignment.Start
         ) {
             Text(

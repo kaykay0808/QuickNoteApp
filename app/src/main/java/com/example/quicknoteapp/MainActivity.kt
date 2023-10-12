@@ -7,9 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.quicknoteapp.data.NotesDummyDataSource
+import com.example.quicknoteapp.data.model.NoteData
 import com.example.quicknoteapp.screen.NoteScreen
 import com.example.quicknoteapp.ui.theme.QuickNoteAppTheme
 
@@ -23,10 +26,18 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    // save something when clicked
+                    val notes = remember {
+                        mutableStateListOf<NoteData>()
+                    }
                     NoteScreen(
-                        notes = NotesDummyDataSource().loadNotes(),//emptyList(),
-                        onAddNote = {},
-                        onRemoveNote = {}
+                        notes = notes,//NotesDummyDataSource().loadNotes(),//emptyList(),
+                        onAddNote = {
+                                   notes.add(it)
+                        },
+                        onRemoveNote = {
+                            notes.remove(it)
+                        }
                     )
                 }
             }
