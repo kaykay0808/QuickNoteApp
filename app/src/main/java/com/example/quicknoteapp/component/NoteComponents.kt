@@ -73,7 +73,7 @@ fun NoteInputTextPreview() {
     NoteInputText(
         label = "Label",
         text = "some random text",
-        onTextChange = {},
+        onTextChange = {}
     )
 }
 

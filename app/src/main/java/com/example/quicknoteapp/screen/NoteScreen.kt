@@ -43,12 +43,14 @@ import java.util.UUID
 @Composable
 fun NoteScreen(
     notes: List<NoteData>,
-    onAddNote: (NoteData) -> Unit,
-    onRemoveNote: (NoteData) -> Unit
+    onAddNote: (NoteData) -> Unit, // -> to NoteButton/onClick
+    onRemoveNote: (NoteData) -> Unit // -> to lazyColumn/noteRow
 ) {
+    // pass this to noteButton/onClick to update title state
     var title by remember {
         mutableStateOf("")
     }
+    // pass this to noteButton/onClick to update description state
     var description by remember {
         mutableStateOf("")
     }
@@ -88,6 +90,7 @@ fun NoteScreen(
                 text = title,
                 label = "Title label",
                 onTextChange = {
+                    // check if character is a letter and whitespace.
                     if (
                         it.all { char ->
                             char.isLetter() || char.isWhitespace()
@@ -113,14 +116,16 @@ fun NoteScreen(
                         description = it
                 }
             )
+            // SAVE BUTTON
             NoteButton(
                 text = "SAVE",
                 onClick = {
-                    // Validate
+                    // Validate if it is some string in the field when clicking the button
                     if (title.isNotEmpty() && description.isNotEmpty()) {
                         // Save and add to list.
                         onAddNote(
                             NoteData(
+                                // updating from rememberState
                                 title = title,
                                 description = description
                             )
@@ -142,7 +147,7 @@ fun NoteScreen(
                 NoteRow(
                     note = note,
                     onNoteClicked = {
-                        onRemoveNote(note)
+                        onRemoveNote(it)
                     }
                 )
                 // Text(text = note.title)
