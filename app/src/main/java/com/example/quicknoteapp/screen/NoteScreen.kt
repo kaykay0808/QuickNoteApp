@@ -24,10 +24,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,10 +41,10 @@ import com.example.quicknoteapp.data.model.NoteData
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun NoteScreen(
-    notes: List<NoteData>,
+    allNotes: List<NoteData>,
     onAddNote: (NoteData) -> Unit, // -> to NoteButton/onClick
     onRemoveNote: (NoteData) -> Unit // -> to lazyColumn/noteRow
 ) {
@@ -55,6 +57,8 @@ fun NoteScreen(
         mutableStateOf("")
     }
     val toastContext = LocalContext.current
+
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     // Box, Surface, Column, Row, card?, Scaffold
     Column(
@@ -81,14 +85,14 @@ fun NoteScreen(
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // our custom NoteTextInput in our component
             NoteInputText(
                 modifier = Modifier
                     .padding(
                         top = 9.dp,
                         bottom = 8.dp
                     ),
-                text = title,
-                label = "Title label",
+                text = title, // mutableState
                 onTextChange = {
                     // check if character is a letter and whitespace.
                     if (
@@ -97,8 +101,10 @@ fun NoteScreen(
                         }
                     )
                         title = it
-                }
+                },
+                label = "Title label"
             )
+            // our custom NoteTextInput in our component
             NoteInputText(
                 modifier = Modifier
                     .padding(
@@ -106,7 +112,6 @@ fun NoteScreen(
                         bottom = 8.dp
                     ),
                 text = description,
-                label = "Add a note",
                 onTextChange = {
                     if (
                         it.all { char ->
@@ -114,9 +119,10 @@ fun NoteScreen(
                         }
                     )
                         description = it
-                }
+                },
+                label = "Add a note"
             )
-            // SAVE BUTTON
+            // SAVE BUTTON (our custom in our component)
             NoteButton(
                 text = "SAVE",
                 onClick = {
@@ -130,6 +136,7 @@ fun NoteScreen(
                                 description = description
                             )
                         )
+                        keyboardController?.hide()
                         title = ""
                         description = ""
                         Toast.makeText(
@@ -143,7 +150,7 @@ fun NoteScreen(
         }
         Divider(modifier = Modifier.padding(10.dp))
         LazyColumn {
-            items(notes) { note ->
+            items(allNotes) { note ->
                 NoteRow(
                     note = note,
                     onNoteClicked = {
@@ -203,7 +210,7 @@ fun NoteRow(
 @Composable
 fun NoteScreenPreview() {
     NoteScreen(
-        notes = NotesDummyDataSource().loadNotes(), // can change to emptyList()
+        allNotes = NotesDummyDataSource().loadNotes(), // can change to emptyList()
         onAddNote = {},
         onRemoveNote = {}
     )

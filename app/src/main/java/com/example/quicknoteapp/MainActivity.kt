@@ -36,7 +36,7 @@ fun NotesApp(
 ) {
     //val notesList = noteScreenViewModel.getAllNotes()
     NoteScreen(
-        notes = noteScreenViewModel.getAllNotes(),//notes,//NotesDummyDataSource().loadNotes(),//emptyList(),
+        allNotes = noteScreenViewModel.getAllNotes(),//notes,//NotesDummyDataSource().loadNotes(),//emptyList(),
         onAddNote = {
             noteScreenViewModel.addNote(it)
         },

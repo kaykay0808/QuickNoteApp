@@ -21,10 +21,10 @@ import androidx.compose.ui.tooling.preview.Preview
 fun NoteInputText(
     modifier: Modifier = Modifier,
     text: String,
+    onTextChange: (String) -> Unit,
     label: String,
     maxLine: Int = 1,
-    onTextChange: (String) -> Unit,
-    onImeAction: () -> Unit = {}
+    onImeAction: () -> Unit = {},
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -66,6 +66,8 @@ fun NoteButton(
         Text(text = text)
     }
 }
+
+/**--------- PREVIEWS -----------*/
 
 @Preview(showBackground = true)
 @Composable
