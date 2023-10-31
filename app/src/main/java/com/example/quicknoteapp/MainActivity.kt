@@ -12,7 +12,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.quicknoteapp.screen.NoteScreen
 import com.example.quicknoteapp.screen.NoteScreenViewModel
 import com.example.quicknoteapp.ui.theme.QuickNoteAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
