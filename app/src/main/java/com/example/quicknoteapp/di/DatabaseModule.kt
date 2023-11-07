@@ -12,23 +12,29 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
+    // Database provider
     @Singleton
     @Provides
     fun provideDatabase(
         @ApplicationContext context: Context
-    ) = Room.databaseBuilder(
+    ): QuickNoteDatabase // Do we need extension?
+            = Room.databaseBuilder(
         context,
         QuickNoteDatabase::class.java,
         "notes_table"
-    ).build()
+    )
+        .fallbackToDestructiveMigration()
+        .build()
 
+    // Dao provider
     @Singleton
     @Provides
-    fun provideDao(database: QuickNoteDatabase) = database.noteDao()
+    fun provideDao(database: QuickNoteDatabase): NoteDao // Do we need extension?
+            = database.noteDao()
 
-    @Singleton
+    /*@Singleton
     @Provides
     fun provideDatastore(
         @ApplicationContext context: Context
-    ) = DataStoreRepository(context = context)
+    ) = DataStoreRepository(context = context)*/
 }
