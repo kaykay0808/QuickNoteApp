@@ -195,14 +195,12 @@ fun NoteRow(
                 text = note.title,
                 style = MaterialTheme.typography.titleSmall
             )
-            Text(
+            /*Text(
                 // Google for different format. EEE = day of the week, d = day of the month, MMM = month
                 text = note.entryDate.format(DateTimeFormatter.ofPattern("EEE d, MMM")),
                 style = MaterialTheme.typography.bodySmall
-            )
-
+            )*/
         }
-
     }
 }
 

@@ -3,6 +3,9 @@ package com.example.quicknoteapp.data.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverter
+import androidx.room.TypeConverters
+import com.example.quicknoteapp.util.DateConverter
 import java.time.Instant
 import java.time.LocalDateTime
 import java.util.Date
@@ -20,6 +23,8 @@ data class NoteData(
     @ColumnInfo(name = "note_description")
     val description: String,
 
+    @field:TypeConverters(DateConverter::class)
     @ColumnInfo(name = "note_entry_date")
-    val entryDate: Date = Date.from(Instant.now()) //LocalDateTime = LocalDateTime.now()
+    val entryDate: Date = Date.from(Instant.now())
 )
+

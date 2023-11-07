@@ -1,7 +1,9 @@
-package com.example.quicknoteapp.data
+package com.example.quicknoteapp.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.quicknoteapp.data.NoteDao
+import com.example.quicknoteapp.data.QuickNoteDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
