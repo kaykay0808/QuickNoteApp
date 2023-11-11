@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.quicknoteapp.screen.NoteScreen
@@ -36,9 +37,9 @@ class MainActivity : ComponentActivity() {
 fun NotesApp(
     noteScreenViewModel: NoteScreenViewModel = viewModel()
 ) {
-    //val notesList = noteScreenViewModel.getAllNotes()
+    val notesList = noteScreenViewModel.noteList.collectAsState().value
     NoteScreen(
-        allNotes = noteScreenViewModel.getAllNotes(),//notes,//NotesDummyDataSource().loadNotes(),//emptyList(),
+        allNotes = notesList, //notes,//NotesDummyDataSource().loadNotes(),//emptyList(),
         onAddNote = {
             noteScreenViewModel.addNote(it)
         },

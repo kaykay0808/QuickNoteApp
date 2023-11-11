@@ -38,6 +38,7 @@ import com.example.quicknoteapp.component.NoteButton
 import com.example.quicknoteapp.component.NoteInputText
 import com.example.quicknoteapp.data.NotesDummyDataSource
 import com.example.quicknoteapp.data.model.NoteData
+import com.example.quicknoteapp.util.formatDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
@@ -193,13 +194,17 @@ fun NoteRow(
         ) {
             Text(
                 text = note.title,
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.titleMedium // subtitle2
             )
-            /*Text(
+            Text(
+                text = note.description,
+                style = MaterialTheme.typography.titleSmall // subtitle1
+            )
+            Text(
                 // Google for different format. EEE = day of the week, d = day of the month, MMM = month
-                text = note.entryDate.format(DateTimeFormatter.ofPattern("EEE d, MMM")),
+                text = formatDate(note.entryDate.time),//note.entryDate.format(DateTimeFormatter.ofPattern("EEE d, MMM")),
                 style = MaterialTheme.typography.bodySmall
-            )*/
+            )
         }
     }
 }
