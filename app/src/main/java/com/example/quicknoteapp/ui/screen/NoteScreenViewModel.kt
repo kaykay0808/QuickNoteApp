@@ -1,4 +1,4 @@
-package com.example.quicknoteapp.screen
+package com.example.quicknoteapp.ui.screen
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -45,4 +45,5 @@ class NoteScreenViewModel @Inject constructor(
 
     fun removeNote(note: NoteData) =
         viewModelScope.launch { repository.deleteNote(noteData = note) }
+
 }
