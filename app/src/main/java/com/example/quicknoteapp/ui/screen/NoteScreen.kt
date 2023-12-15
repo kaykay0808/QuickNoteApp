@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.quicknoteapp.R
@@ -36,8 +37,10 @@ fun NoteScreen(
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     title: String,
+    maxLine: Int,
     description: String,
     onSaveButtonClicked: () -> Unit,
+    onDeleteClicked: (NoteData) -> Unit
 ) {
     // Box, Surface, Column, Row, card?, Scaffold
     Column(
@@ -74,7 +77,8 @@ fun NoteScreen(
                 text = title, // mutableState
                 onTextChange = onTitleChange,
                 // check if character is a letter and whitespace.
-                label = "Title label"
+                label = "Title label",
+                maxLine = maxLine
             )
             // our custom NoteTextInput in our component
             NoteInputText(
@@ -85,7 +89,8 @@ fun NoteScreen(
                     ),
                 text = description,
                 onTextChange = onDescriptionChange,
-                label = "Add a note"
+                label = "Add a note",
+                maxLine = maxLine
             )
             // SAVE BUTTON (our custom in our component)
             NoteButton(
@@ -97,11 +102,16 @@ fun NoteScreen(
         Divider(modifier = Modifier.padding(10.dp))
         LazyColumn {
             items(allNotes) { note ->
+                Text(
+                    text = note.title,
+                    fontWeight = FontWeight.Bold
+                )
                 NoteRow(
                     note = note,
-                    onNoteClicked = onNoteClicked//{ selectedNote = it }
+                    onNoteClicked = onNoteClicked,//{ selectedNote = it }
+                    onDeleteClicked = onDeleteClicked
                 )
-                Text(text = note.title)
+                Divider()
             }
         }
     }
@@ -116,8 +126,10 @@ fun NoteScreenPreview() {
         onSaveButtonClicked = {},
         onTitleChange = {},
         onDescriptionChange = {},
+        onDeleteClicked = {},
         title = "Some Title",
         description = "Description of the Task",
+        maxLine = 1
     )
 }
 

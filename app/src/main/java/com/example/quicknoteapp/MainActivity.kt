@@ -121,8 +121,10 @@ fun NotesApp(
                     Toast.LENGTH_SHORT
                 ).show()
             }
-            // selectedNote = null
-        }
+            selectedNote = null
+        },
+        onDeleteClicked = {noteScreenViewModel.removeNote(it)},
+        maxLine = 1
     )
     // Everytime selectedNote changes this run. if it doesn't  change this doesn't launch
     LaunchedEffect(selectedNote) {

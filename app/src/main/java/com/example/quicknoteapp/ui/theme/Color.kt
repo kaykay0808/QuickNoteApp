@@ -22,5 +22,3 @@ val MaterialTheme.rowBackGroundColor: Color
 val MaterialTheme.rowTextColor: Color
     @Composable
     get() = if (isSystemInDarkTheme()) LightGray else DarkGray
-
-

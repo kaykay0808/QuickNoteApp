@@ -23,7 +23,7 @@ fun NoteInputText(
     text: String,
     onTextChange: (String) -> Unit,
     label: String,
-    maxLine: Int = 1,
+    maxLine: Int,
     onImeAction: () -> Unit = {},
 ) {
 
@@ -75,7 +75,8 @@ fun NoteInputTextPreview() {
     NoteInputText(
         label = "Label",
         text = "some random text",
-        onTextChange = {}
+        onTextChange = {},
+        maxLine = 1
     )
 }
 

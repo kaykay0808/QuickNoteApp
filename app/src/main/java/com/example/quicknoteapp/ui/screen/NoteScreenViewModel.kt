@@ -1,6 +1,9 @@
 package com.example.quicknoteapp.ui.screen
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quicknoteapp.data.model.NoteData
@@ -17,6 +20,10 @@ import javax.inject.Inject
 class NoteScreenViewModel @Inject constructor(
     private val repository: NoteRepository
 ) : ViewModel() {
+
+    var viewState by mutableStateOf(NoteScreenViewState())
+        private set
+
     // private var noteList = mutableStateListOf<NoteData>()
     private val _noteList = MutableStateFlow<List<NoteData>>(emptyList())
     val noteList = _noteList.asStateFlow()
@@ -29,6 +36,7 @@ class NoteScreenViewModel @Inject constructor(
                 .collect { listOfNotes ->
                     if (listOfNotes.isNullOrEmpty()) {
                         Log.d("Empty", ":Empty List")
+                        _noteList.value = emptyList()
                     } else {
                         _noteList.value = listOfNotes
                     }
