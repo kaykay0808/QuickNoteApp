@@ -22,5 +22,4 @@ class NoteRepository @Inject constructor(private val noteDao: NoteDao) {
         .getAllNotes()
         .flowOn(Dispatchers.IO)
         .conflate()
-
 }

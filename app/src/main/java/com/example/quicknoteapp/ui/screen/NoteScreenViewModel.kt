@@ -10,8 +10,6 @@ import com.example.quicknoteapp.data.model.NoteData
 import com.example.quicknoteapp.repository.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,9 +22,10 @@ class NoteScreenViewModel @Inject constructor(
     var viewState by mutableStateOf(NoteScreenViewState())
         private set
 
-    // private var noteList = mutableStateListOf<NoteData>()
-    private val _noteList = MutableStateFlow<List<NoteData>>(emptyList())
-    val noteList = _noteList.asStateFlow()
+    private var noteList: List<NoteData> = emptyList()
+    private var title = ""
+    private var description = ""
+    private var selectedNote: NoteData? = null
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -36,13 +35,26 @@ class NoteScreenViewModel @Inject constructor(
                 .collect { listOfNotes ->
                     if (listOfNotes.isNullOrEmpty()) {
                         Log.d("Empty", ":Empty List")
-                        _noteList.value = emptyList()
+                        noteList = emptyList()
+                        render()
                     } else {
-                        _noteList.value = listOfNotes
+                        noteList = listOfNotes
+                        render()
                     }
                 }
         }
         // noteList.addAll(NotesDummyDataSource().loadNotes())
+    }
+
+    private fun render() {
+        viewModelScope.launch(Dispatchers.Main) {
+            viewState = NoteScreenViewState(
+                allNotes = noteList,
+                title = title,
+                description = description,
+                selectedNote = selectedNote
+            )
+        }
     }
 
     fun addNote(note: NoteData) =
@@ -54,4 +66,35 @@ class NoteScreenViewModel @Inject constructor(
     fun removeNote(note: NoteData) =
         viewModelScope.launch { repository.deleteNote(noteData = note) }
 
+    /**-----------------------------------------------------------------------*/
+
+    fun selectedNote(clickedNote: NoteData) {
+        selectedNote = clickedNote
+        render()
+    }
+
+    fun defaultSelectedNoteState() {
+        selectedNote = null
+        render()
+    }
+
+    fun newTitleInput(newInputVal: String) {
+        title = newInputVal
+        render()
+    }
+
+    fun defaultTitleInput() {
+        title = ""
+        render()
+    }
+
+    fun newDescriptionInput(newInputVal: String) {
+        description = newInputVal
+        render()
+    }
+
+    fun defaultDescriptionInput() {
+        description = ""
+        render()
+    }
 }

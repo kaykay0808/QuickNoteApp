@@ -9,11 +9,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -48,41 +43,28 @@ class MainActivity : ComponentActivity() {
 fun NotesApp(
     noteScreenViewModel: NoteScreenViewModel = viewModel()
 ) {
-    // pass this to noteButton/onClick to update title state
-    var title by remember {
-        mutableStateOf("")
-    }
-    // pass this to noteButton/onClick to update description state
-    var description by remember {
-        mutableStateOf("")
-    }
-
-    var selectedNote by remember {
-        mutableStateOf<NoteData?>(null)
-    }
-
-    val notesList = noteScreenViewModel.noteList.collectAsState().value
+    val viewState = noteScreenViewModel.viewState
+    val allTask = viewState.allNotes
+    // val notesList = noteScreenViewModel.noteList.collectAsState().value
 
     val toastContext = LocalContext.current
 
     val keyboardController = LocalSoftwareKeyboardController.current
     NoteScreen(
-        allNotes = notesList, //notes,//NotesDummyDataSource().loadNotes(),//emptyList(),
-        /*onRemoveNote = {
-            noteScreenViewModel.removeNote(it)
-        },*/
+        allNotes = allTask, //notes,//NotesDummyDataSource().loadNotes(),//emptyList(),
         onNoteClicked = {
-            selectedNote = it
+            noteScreenViewModel.selectedNote(it)
         },
-        title = title,
-        description = description,
+        title = viewState.title,
+        description = viewState.description,
         onTitleChange = {
             if (
                 it.all { char ->
                     char.isLetter() || char.isWhitespace() || char.isDigit()
                 }
             )
-                title = it
+                noteScreenViewModel.newTitleInput(it)
+            // title = it
         },
         onDescriptionChange = {
             if (
@@ -90,47 +72,49 @@ fun NotesApp(
                     char.isLetter() || char.isWhitespace() || char.isDigit()
                 }
             )
-                description = it
+                noteScreenViewModel.newDescriptionInput(it)
+            // description = it
         },
         onSaveButtonClicked = {
-            if (title.isNotEmpty() && description.isNotEmpty()) {
-                if (selectedNote != null) {
+            if (viewState.title.isNotEmpty() && viewState.description.isNotEmpty()) {
+                if (viewState.selectedNote != null) {
                     // Update the selected note
                     noteScreenViewModel.updateNote(
-                        selectedNote!!.copy(
-                            title = title,
-                            description = description
+                        viewState.selectedNote!!.copy(
+                            title = viewState.title,
+                            description = viewState.description
                         )
                     )
                 } else {
                     // Save and add to list.
                     noteScreenViewModel.addNote(
                         NoteData(
-                            title = title,
-                            description = description
+                            title = viewState.title,
+                            description = viewState.description
                         )
                     )
                 }
 
                 keyboardController?.hide()
-                title = ""
-                description = ""
+                noteScreenViewModel.defaultTitleInput()
+                noteScreenViewModel.defaultDescriptionInput()
                 Toast.makeText(
                     toastContext,
-                    if (selectedNote != null) "Note updated" else "Note added",
+                    if (viewState.selectedNote != null) "Note updated" else "Note added",
                     Toast.LENGTH_SHORT
                 ).show()
             }
-            selectedNote = null
+            noteScreenViewModel.defaultSelectedNoteState()
         },
-        onDeleteClicked = {noteScreenViewModel.removeNote(it)},
+        onDeleteClicked = { noteScreenViewModel.removeNote(it) },
         maxLine = 1
     )
     // Everytime selectedNote changes this run. if it doesn't  change this doesn't launch
-    LaunchedEffect(selectedNote) {
-        selectedNote?.let {
-            title = it.title
-            description = it.description
+    LaunchedEffect(viewState.selectedNote) {
+        viewState.selectedNote?.let {
+            noteScreenViewModel.newTitleInput(it.title)
+            noteScreenViewModel.newDescriptionInput(it.description)
+
         }
     }
 }
